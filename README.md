@@ -14,6 +14,16 @@ A web app to index, match and retrieve images based on a range of visual, concep
 6. Test the setting by running `cs2108` module
 7. You are all set now :smile:
 
+### Files
+* [**cs2108/**](/cs2108) : Python package for the project
+* [**cs2108/settings.py**](/cs2108/settings.py) : Settings/configuration for this Django project
+* [**cs2108/urls.py**](/cs2108/urls.py) : The URL declarations for this Django project; a “table of contents” of the Django-powered site
+* [**cs2108/wsgi.py**](/cs2108/wsgi.py) : An entry-point for WSGI-compatible web servers to serve the project
+* [**retrieval/**](/retrieval) : Main backend code of the project
+* [**retrieval/data/**](/retrieval/data) : Image data for training and testing
+* [**retrieval/src/**](/retrieval/src) : Algorithms for indexing, matching and retrieving images
+* [**templates/**](/templates) : HTML for the web pages
+
 # Authors
 * [Wu Yu Ting](https://github.com/youthinkk)
 * [Jiang Hongchao](https://github.com/jianghc93)
