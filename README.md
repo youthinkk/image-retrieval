@@ -7,7 +7,7 @@ A web app to index, match and retrieve images based on a range of visual, concep
 
 ### Setup
 1. Open **PyCharm**
-2. Choose **GitHub** under **Check out from Vision Control**
+2. Choose **GitHub** under **Check out from Version Control**
 3. Under **Clone Repository**, input the following details:
   * **Git Repository URL** : `https://github.com/youthinkk/image-retrieval.git`
   * **Directory Name** : `cs2108`
