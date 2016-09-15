@@ -1,0 +1,3 @@
+"""
+Template for main algorithm
+"""
