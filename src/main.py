@@ -1,5 +1,8 @@
 import cv2
-from histogram import ColorDescriptor
+import glob
+import csv
+import numpy as np
+from histogram import ColorDescriptor, calculate_distance
 from learning import inference
 from keywords import runSIFT
 
@@ -21,3 +24,23 @@ if __name__ == '__main__':
 
     #compute sift
     runSIFT(image1, image2)
+
+    # Color Histogram
+    csvreader = csv.reader(open("colorhist.csv", "rb"))
+    results = []
+
+    test_files = glob.glob("test/*.jpg")
+    for path in test_files: # this for loop only runs one time
+        print path
+        image = cv2.imread(path)
+        for _ in xrange(1500):
+            row = csvreader.next()
+            filename = row[0]
+            label = row[1]
+            color_hist_train = np.array([float(col) for col in row[2:]])
+            color_hist_test = color_descriptor.describe(image)
+            results.append((label, calculate_distance(color_hist_test, color_hist_train)))
+
+        results = sorted(results, key=lambda x: x[1])[-16:]
+        print results
+        break
