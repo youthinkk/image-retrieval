@@ -8,9 +8,9 @@ import cv2
 
 # construct the argument parser and parse the arguments
 ap = argparse.ArgumentParser()
-ap.add_argument("-d", "--dataset", required=False, default='dataset',
+ap.add_argument("-d", "--dataset", required=False, default='../data/train',
                 help="Path to the directory that contains the images to be indexed")
-ap.add_argument("-i", "--index", required=False, default='index.csv',
+ap.add_argument("-i", "--index", required=False, default='colorhist.csv',
                 help="Path to where the computed index will be stored")
 args = vars(ap.parse_args())
 
@@ -32,7 +32,8 @@ for image_path in glob.glob(args["dataset"] + "/*.jpg"):
 
     # write the features to file
     features = [str(f) for f in features]
-    output.write("%s,%s\n" % (image_id, ",".join(features)))
+    label = image_id.split("_")[-1][:-4]
+    output.write("%s,%s,%s\n" % (image_id, label, ",".join(features)))
 
 # close the index file
 output.close()
