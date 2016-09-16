@@ -1,3 +1,0 @@
-"""
-Template for Deep Learning
-"""
