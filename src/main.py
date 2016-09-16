@@ -1,6 +1,7 @@
 import cv2
 from histogram import ColorDescriptor
 from learning import inference
+from keywords import runSIFT
 
 COLOR_BINS = (8, 12, 3)
 
@@ -17,3 +18,6 @@ if __name__ == '__main__':
 
     # Compute prediction of the image and return top 5 [(name, score)]
     predictions = inference(IMAGE1_PATH)
+
+    #compute sift
+    runSIFT(image1, image2)
