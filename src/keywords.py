@@ -33,8 +33,7 @@ def runSIFT(image1, image2):
     kp1 = findKp(gray1)
     kp2 = findKp(gray2)
 
-    print kp1
-    #draw kp on img
+    #draw kp on img (not necessary)
     newImg1 = cv2.drawKeypoints(gray1, kp1)
     newImg2 = cv2.drawKeypoints(gray2, kp2)
     # cv2.imwrite('testOriginal.jpg', gray1)
