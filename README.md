@@ -3,6 +3,8 @@ A web app to index, match and retrieve images based on a range of visual, concep
 
 # Development
 ### Dependencies
+* Python 2.7
+* OpenCV 2.4.11
 * [PyCharm 2016.2](https://www.jetbrains.com/pycharm/)
 
 ### Setup
