@@ -8,8 +8,8 @@ COLOR_BINS = (8, 12, 3)
 color_descriptor = ColorDescriptor(COLOR_BINS)
 
 if __name__ == '__main__':
-    IMAGE1_PATH = "../data/train/data/balloons/0079_1387720721.jpg"
-    IMAGE2_PATH = "../data/train/data/balloons/0066_2283108985.jpg"
+    IMAGE1_PATH = "../data/test/0001_127194972_balloons.jpg"
+    IMAGE2_PATH = "../data/test/0001_439648413_alley.jpg"
     image1 = cv2.imread(IMAGE1_PATH)
     image2 = cv2.imread(IMAGE2_PATH)
 
