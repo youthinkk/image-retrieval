@@ -14,13 +14,15 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
+import os.path
 import sys
 import tarfile
-import os.path
+import urllib
+
 import numpy as np
 import tensorflow as tf
-import urllib
-from learning_index import load_index
+
+from src.core.learning_index import load_index
 
 FLAGS = tf.app.flags.FLAGS
 tf.app.flags.DEFINE_string('MODEL_DIR', '/tmp/imagenet',

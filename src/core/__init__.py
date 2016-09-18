@@ -1,1 +1,1 @@
-from histogram import ColorDescriptor
+from histogram import ColorDescriptor, color_similarity

@@ -1,6 +1,6 @@
 import glob
 import cv2
-from src import ColorDescriptor
+from src.core import ColorDescriptor
 
 DATA_FOLDER = "../data"
 TRAIN_FOLDER = DATA_FOLDER + "/train"

@@ -19,15 +19,13 @@ def get_test_histogram():
 
 def get_histogram_index_file(file_path):
     reader = csv.reader(open(file_path, "rb"))
-    histogram_dict = {}
-    label_dict = {}
+    dict = {}
 
     for row in reader:
         file_name = row[0]
         label = row[1]
         histogram = np.array([float(column) for column in row[2:]])
 
-        label_dict[file_name] = label
-        histogram_dict[file_name] = histogram
+        dict[file_name] = (label, histogram)
 
-    return label_dict, histogram_dict
+    return dict

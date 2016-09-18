@@ -1,46 +1,31 @@
 import cv2
-import glob
-import csv
-import numpy as np
-from histogram import ColorDescriptor, calculate_distance
-from learning import inference
-from keywords import runSIFT
+from src.main.histogram import ColorDescriptor, color_similarity
+
+from src.core.learning import inference, learning_similarity
 
 COLOR_BINS = (8, 12, 3)
 
 color_descriptor = ColorDescriptor(COLOR_BINS)
 
 if __name__ == '__main__':
-    IMAGE1_PATH = "../data/test/0001_127194972_balloons.jpg"
-    IMAGE2_PATH = "../data/test/0001_439648413_alley.jpg"
+    IMAGE1_PATH = "../data/train/0090_2078259391_zebra.jpg"
+    IMAGE2_PATH = "../data/train/0020_386347744_antlers.jpg"
     image1 = cv2.imread(IMAGE1_PATH)
     image2 = cv2.imread(IMAGE2_PATH)
 
-    # Compute color similarity and return a scalar similarity score
-    color_similarity = color_descriptor.similarity(image1, image1)
+    # Compute color similarity
+    histogram1 = color_descriptor.describe(image1)
+    histogram2 = color_descriptor.describe(image2)
+    color_similarity = color_similarity(histogram1, histogram2)
 
-    # Compute prediction of the image and return top 5 [(name, score)]
+    # Compute deep learning similarity
     predictions = inference(IMAGE1_PATH)
+    learning_similarity = learning_similarity(predictions, "zebra")
 
+    print learning_similarity
+
+    '''
     #compute sift
     runSIFT(image1, image2)
 
-    # Color Histogram
-    csvreader = csv.reader(open("colorhist.csv", "rb"))
-    results = []
-
-    test_files = glob.glob("test/*.jpg")
-    for path in test_files: # this for loop only runs one time
-        print path
-        image = cv2.imread(path)
-        for _ in xrange(1500):
-            row = csvreader.next()
-            filename = row[0]
-            label = row[1]
-            color_hist_train = np.array([float(col) for col in row[2:]])
-            color_hist_test = color_descriptor.describe(image)
-            results.append((label, calculate_distance(color_hist_test, color_hist_train)))
-
-        results = sorted(results, key=lambda x: x[1])[-16:]
-        print results
-        break
+    '''
