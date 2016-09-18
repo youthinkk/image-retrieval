@@ -9,8 +9,8 @@ def get_color_index(file_path):
     for row in reader:
         file_name = row[0]
         label = row[1]
-        histogram = np.array([float(column) for column in row[2:]])
+        color = np.array([float(column) for column in row[2:]])
 
-        dict[file_name] = (label, histogram)
+        dict[file_name] = (label, color)
 
     return dict

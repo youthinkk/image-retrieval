@@ -11,7 +11,7 @@ TRAIN_COLOR_INDEX_PATH = INDEX_FOLDER + "/train_histogram.csv"
 TEST_COLOR_INDEX_PATH = INDEX_FOLDER + "/test_histogram.csv"
 
 
-def generate_histogram_index_file(folder_directory, output_path):
+def generate_color_index_file(folder_directory, output_path):
     file_paths = glob.glob(folder_directory + "/*.jpg")
     output = open(output_path, "w")
 
@@ -20,15 +20,15 @@ def generate_histogram_index_file(folder_directory, output_path):
         label = image_id.split("_")[-1][:-4]
 
         image = cv2.imread(path)
-        histogram = describe_color(image)
-        histogram = [str(f) for f in histogram]
-        output.write("%s,%s,%s\n" % (image_id, label, ",".join(histogram)))
+        color = describe_color(image)
+        color = [str(f) for f in color]
+        output.write("%s,%s,%s\n" % (image_id, label, ",".join(color)))
 
     output.close()
 
 
 # Generate histogram index file for training images
-generate_histogram_index_file(TRAIN_FOLDER, TRAIN_COLOR_INDEX_PATH)
+generate_color_index_file(TRAIN_FOLDER, TRAIN_COLOR_INDEX_PATH)
 
 # Generate histogram index file for testing images
-generate_histogram_index_file(TEST_FOLDER, TEST_COLOR_INDEX_PATH)
+generate_color_index_file(TEST_FOLDER, TEST_COLOR_INDEX_PATH)

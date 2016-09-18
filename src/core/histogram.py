@@ -5,18 +5,18 @@ import math
 COLOR_BINS = (8, 12, 3)
 
 
-def calculate_distance(histogram1, histogram2):
+def calculate_distance(feature1, feature2):
     """
     Calculate distance between two histograms using
     Bhattacharyya distance
     """
-    length = len(histogram1)
-    sum1 = np.sum(histogram1)
-    sum2 = np.sum(histogram2)
+    length = len(feature1)
+    sum1 = np.sum(feature1)
+    sum2 = np.sum(feature2)
     root_sum = 0.
 
     for i in xrange(length):
-        root_sum += math.sqrt(histogram1[i] * histogram2[i])
+        root_sum += math.sqrt(feature1[i] * feature2[i])
 
     square_distance = 1 - root_sum / math.sqrt(sum1 * sum2)
     square_distance = 0 if square_distance < 0 else square_distance
@@ -24,11 +24,11 @@ def calculate_distance(histogram1, histogram2):
     return math.sqrt(square_distance)
 
 
-def color_similarity(histogram1, histogram2):
+def color_similarity(feature1, feature2):
     """
     Compare the similarity of two images
     """
-    return 1 - calculate_distance(histogram1, histogram2)
+    return 1 - calculate_distance(feature1, feature2)
 
 
 def describe_color(image):
