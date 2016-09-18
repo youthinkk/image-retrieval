@@ -1,3 +1,68 @@
+def load_index(label):
+    if label == "alley":
+        return class_empty()
+    elif label == "antlers":
+        return class_antler()
+    elif label == "baby":
+        return class_empty()
+    elif label == "balloons":
+        return class_balloon()
+    elif label == "beach":
+        return class_beach()
+    elif label == "bear":
+        return class_bear()
+    elif label == "birds":
+        return class_bird()
+    elif label == "boats":
+        return class_boat()
+    elif label == "cars":
+        return class_car()
+    elif label == "cat":
+        return class_cat()
+    elif label == "computer":
+        return class_computer()
+    elif label == "coral":
+        return class_coral()
+    elif label == "dog":
+        return class_dog()
+    elif label == "fish":
+        return class_fish()
+    elif label == "flags":
+        return class_flag()
+    elif label == "flowers":
+        return class_flower()
+    elif label == "horses":
+        return class_horse()
+    elif label == "leaf":
+        return class_empty()
+    elif label == "plane":
+        return class_plane()
+    elif label == "rainbow":
+        return class_empty()
+    elif label == "rocks":
+        return class_empty()
+    elif label == "sign":
+        return class_sign()
+    elif label == "snow":
+        return class_snow()
+    elif label == "tiger":
+        return class_tiger()
+    elif label == "tower":
+        return class_tower()
+    elif label == "train":
+        return class_train()
+    elif label == "tree":
+        return class_empty()
+    elif label == "whales":
+        return class_whale()
+    elif label == "window":
+        return class_window()
+    elif label == "zebra":
+        return class_zebra()
+
+    return class_empty()
+
+
 def class_empty():
     """
     For alley, baby, leaf, rainbow, rock and tree
