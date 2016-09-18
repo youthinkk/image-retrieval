@@ -5,7 +5,7 @@ import math
 COLOR_BINS = (8, 12, 3)
 
 
-def calculate_distance(feature1, feature2):
+def bhattacharyya_distance(feature1, feature2):
     """
     Calculate distance between two histograms using
     Bhattacharyya distance
@@ -24,11 +24,20 @@ def calculate_distance(feature1, feature2):
     return math.sqrt(square_distance)
 
 
+def chi2_distance(feature1, feature2, eps=1e-10):
+    # compute the chi-squared distance
+    distance = 0.5 * np.sum([((a - b) ** 2) / (a + b + eps)
+                             for (a, b) in zip(feature1, feature2)])
+
+    # return the chi-squared distance
+    return distance
+
+
 def color_similarity(feature1, feature2):
     """
     Compare the similarity of two images
     """
-    return 1 - calculate_distance(feature1, feature2)
+    return 1 - chi2_distance(feature1, feature2)
 
 
 def describe_color(image):

@@ -43,5 +43,8 @@ def eval_color():
 
     return accuracy
 
-# Color histogram accuracy: 0.0329166666667
+
+# Color histogram accuracy
+# Using Bhattacharyya distance: 0.0329166666667
+# Using chi2 distance: 0.0358333333333
 print "Color histogram accuracy: ", eval_color()
