@@ -1,6 +1,6 @@
-from histogram import ColorDescriptor
 import glob
 import cv2
+from src import ColorDescriptor
 
 DATA_FOLDER = "../data"
 TRAIN_FOLDER = DATA_FOLDER + "/train"
@@ -28,5 +28,8 @@ def generate_histogram_index_file(folder_directory, output_path):
     output.close()
 
 
+# Generate histogram index file for training images
 generate_histogram_index_file(TRAIN_FOLDER, TRAIN_HISTOGRAM_INDEX_PATH)
+
+# Generate histogram index file for testing images
 generate_histogram_index_file(TEST_FOLDER, TEST_HISTOGRAM_INDEX_PATH)
