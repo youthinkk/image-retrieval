@@ -9,7 +9,6 @@ TEST_HISTOGRAM_INDEX_PATH = INDEX_FOLDER + "/test_histogram.csv"
 
 
 def get_train_histogram():
-    print TRAIN_HISTOGRAM_INDEX_PATH
     return get_histogram_index_file(TRAIN_HISTOGRAM_INDEX_PATH)
 
 

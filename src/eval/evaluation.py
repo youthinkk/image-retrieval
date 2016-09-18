@@ -3,6 +3,7 @@ from src.core import color_similarity
 
 K_SIZE = 16
 
+
 def eval_histogram():
     test_dict = get_test_histogram()
     train_dict = get_train_histogram()
@@ -20,3 +21,5 @@ def eval_histogram():
         top_k = sorted(results, key=lambda x: x[1], reverse=True)[:K_SIZE]
         print top_k
         break
+
+eval_histogram()
