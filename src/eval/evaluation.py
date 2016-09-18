@@ -3,17 +3,31 @@ from src.core import color_similarity
 
 K_SIZE = 16
 
-INDEX_FOLDER = DATA_FOLDER + "../../data/index"
+INDEX_FOLDER = "../../data/index"
 TRAIN_COLOR_INDEX_PATH = INDEX_FOLDER + "/train_histogram.csv"
 TEST_COLOR_INDEX_PATH = INDEX_FOLDER + "/test_histogram.csv"
 
 
-def eval_histogram():
+def local_accuracy(top_k, test_label):
+    local_sum = 0.
+    for i in xrange(K_SIZE):
+        label = top_k[i][0]
+        if label == test_label:
+            local_sum += 1
+
+    return local_sum / K_SIZE
+
+
+def eval_color():
     test_dict = get_color_index(TEST_COLOR_INDEX_PATH)
     train_dict = get_color_index(TRAIN_COLOR_INDEX_PATH)
+
+    test_size = len(test_dict)
+    accuracy_sum = 0.
     results = []
 
     for test_name, test_value in test_dict.iteritems():
+        test_label = test_value[0]
         test_color = test_value[1]
 
         for train_name, train_value in train_dict.iteritems():
@@ -23,7 +37,11 @@ def eval_histogram():
             results.append((train_label, similarity))
 
         top_k = sorted(results, key=lambda x: x[1], reverse=True)[:K_SIZE]
-        print top_k
-        break
+        accuracy_sum += local_accuracy(top_k, test_label)
 
-eval_histogram()
+    accuracy = accuracy_sum / test_size
+
+    return accuracy
+
+# Color histogram accuracy: 0.0329166666667
+print "Color histogram accuracy: ", eval_color()
