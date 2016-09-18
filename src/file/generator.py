@@ -1,6 +1,6 @@
 import glob
 import cv2
-from src.core import ColorDescriptor
+from src.core import describe_color
 
 DATA_FOLDER = "../data"
 TRAIN_FOLDER = DATA_FOLDER + "/train"
@@ -12,7 +12,6 @@ TEST_HISTOGRAM_INDEX_PATH = INDEX_FOLDER + "/test_histogram.csv"
 
 
 def generate_histogram_index_file(folder_directory, output_path):
-    color_descriptor = ColorDescriptor((8, 12, 3))
     file_paths = glob.glob(folder_directory + "/*.jpg")
     output = open(output_path, "w")
 
@@ -21,7 +20,7 @@ def generate_histogram_index_file(folder_directory, output_path):
         label = image_id.split("_")[-1][:-4]
 
         image = cv2.imread(path)
-        histogram = color_descriptor.describe(image)
+        histogram = describe_color(image)
         histogram = [str(f) for f in histogram]
         output.write("%s,%s,%s\n" % (image_id, label, ",".join(histogram)))
 
