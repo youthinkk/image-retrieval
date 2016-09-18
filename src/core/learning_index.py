@@ -168,6 +168,7 @@ def class_horse():
 def class_plane():
     index = [i for i in xrange(230, 233)]
     index += [246, 503]
+    return index
 
 
 def class_sign():

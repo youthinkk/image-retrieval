@@ -1,24 +1,42 @@
 import cv2
+import numpy as np
 from src.core import describe_color, color_similarity
 from src.core import inference, learning_similarity
+from src.file import get_color_index
+
+K_SIZE = 16
+TRAIN_COLOR_INDEX_PATH = "../data/index/train_histogram.csv"
+
+
+def calculate_socre(similarities):
+    weights = np.array([0, 2])
+    return np.inner(weights, similarities)
 
 
 if __name__ == '__main__':
-    IMAGE1_PATH = "../data/train/0090_2078259391_zebra.jpg"
-    IMAGE2_PATH = "../data/train/0020_386347744_antlers.jpg"
-    image1 = cv2.imread(IMAGE1_PATH)
-    image2 = cv2.imread(IMAGE2_PATH)
+    query_path = "../data/test/0001_127194972_balloons.jpg"
+    query_image = cv2.imread(query_path)
+    train_color_dict = get_color_index(TRAIN_COLOR_INDEX_PATH)
+    results = []
 
-    # Compute color similarity
-    histogram1 = describe_color().describe(image1)
-    histogram2 = describe_color().describe(image2)
-    color_similarity = color_similarity(histogram1, histogram2)
+    # Compute color feature of query image
+    query_color = describe_color(query_image)
 
-    # Compute deep learning similarity
-    predictions = inference(IMAGE1_PATH)
-    learning_similarity = learning_similarity(predictions, "zebra")
+    # Compute deep learning predictions of query image
+    predictions = inference(query_path)
 
-    print learning_similarity
+    for file_name, train_value in train_color_dict.iteritems():
+        train_label = train_value[0]
+        train_color = train_value[1]
+
+        color_sim = color_similarity(query_color, train_color)
+        learning_sim = learning_similarity(predictions, train_label)
+
+        score = calculate_socre([color_sim, learning_sim])
+        results.append((file_name, score))
+
+    top_k = sorted(results, key=lambda x: x[1], reverse=True)[:K_SIZE]
+    print top_k
 
     '''
     #compute sift

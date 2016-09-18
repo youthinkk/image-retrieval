@@ -7,8 +7,8 @@ TRAIN_FOLDER = DATA_FOLDER + "/train"
 TEST_FOLDER = DATA_FOLDER + "/test"
 INDEX_FOLDER = DATA_FOLDER + "/index"
 
-TRAIN_HISTOGRAM_INDEX_PATH = INDEX_FOLDER + "/train_histogram.csv"
-TEST_HISTOGRAM_INDEX_PATH = INDEX_FOLDER + "/test_histogram.csv"
+TRAIN_COLOR_INDEX_PATH = INDEX_FOLDER + "/train_histogram.csv"
+TEST_COLOR_INDEX_PATH = INDEX_FOLDER + "/test_histogram.csv"
 
 
 def generate_histogram_index_file(folder_directory, output_path):
@@ -28,7 +28,7 @@ def generate_histogram_index_file(folder_directory, output_path):
 
 
 # Generate histogram index file for training images
-generate_histogram_index_file(TRAIN_FOLDER, TRAIN_HISTOGRAM_INDEX_PATH)
+generate_histogram_index_file(TRAIN_FOLDER, TRAIN_COLOR_INDEX_PATH)
 
 # Generate histogram index file for testing images
-generate_histogram_index_file(TEST_FOLDER, TEST_HISTOGRAM_INDEX_PATH)
+generate_histogram_index_file(TEST_FOLDER, TEST_COLOR_INDEX_PATH)
