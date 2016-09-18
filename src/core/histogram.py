@@ -5,8 +5,8 @@ import math
 
 def calculate_distance(histogram1, histogram2):
     """
-        Calculate distance between two histograms using
-        Bhattacharyya distance
+    Calculate distance between two histograms using
+    Bhattacharyya distance
     """
     length = len(histogram1)
     sum1 = np.sum(histogram1)
@@ -24,7 +24,7 @@ def calculate_distance(histogram1, histogram2):
 
 def color_similarity(histogram1, histogram2):
     """
-        Compare the similarity of two images
+    Compare the similarity of two images
     """
     return 1 - calculate_distance(histogram1, histogram2)
 
@@ -36,8 +36,8 @@ class ColorDescriptor:
 
     def describe(self, image):
         """
-            Convert the image to the HSV color space and initialize
-            the features used to quantify the image
+        Convert the image to the HSV color space and initialize
+        the features used to quantify the image
         """
         image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
         features = []
@@ -80,9 +80,9 @@ class ColorDescriptor:
 
     def histogram(self, image, mask):
         """
-            Extract a 3D color histogram from the masked region of the
-            image, using the supplied number of bins per channel; then
-            normalize the histogram
+        Extract a 3D color histogram from the masked region of the
+        image, using the supplied number of bins per channel; then
+        normalize the histogram
         """
         hist = cv2.calcHist([image], [0, 1, 2], mask, self.bins,
                             [0, 180, 0, 256, 0, 256])
@@ -90,12 +90,3 @@ class ColorDescriptor:
 
         # return the histogram
         return hist
-
-    def similarity(self, image1, image2):
-        """
-            Compare the similarity of two images
-        """
-        histogram1 = self.describe(image1)
-        histogram2 = self.describe(image2)
-        distance = calculate_distance(histogram1, histogram2)
-        return 1 - distance
