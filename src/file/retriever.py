@@ -2,7 +2,7 @@ import csv
 import numpy as np
 
 
-def get_color_index(file_path):
+def get_index(file_path):
     reader = csv.reader(open(file_path, "rb"))
     dict = {}
 

@@ -1,1 +1,1 @@
-from retriever import get_color_index
+from retriever import get_index
