@@ -1,7 +1,7 @@
 import glob
 import cv2
 from src.core import describe_color
-from src.core import SIFTDescriptor
+from src.core import SIFTDescriptor, train_bow
 
 DATA_FOLDER = "../../data"
 TRAIN_FOLDER = DATA_FOLDER + "/train"
@@ -56,3 +56,6 @@ generate_sift_index_file(TRAIN_FOLDER, TRAIN_SIFT_INDEX_PATH)
 # Generate index file for testing images
 # generate_color_index_file(TEST_FOLDER, TEST_COLOR_INDEX_PATH)
 generate_sift_index_file(TEST_FOLDER, TEST_SIFT_INDEX_PATH)
+
+# Generate BoW
+# train_bow(20)

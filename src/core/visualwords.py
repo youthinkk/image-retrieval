@@ -24,7 +24,7 @@ def train_bow(dictionary_size):
     sift = cv2.SIFT()
     BOW = cv2.BOWKMeansTrainer(dictionary_size)
 
-    for p in glob.glob("../data/train/*.jpg"):
+    for p in glob.glob("../../data/train/*.jpg"):
         image = cv2.imread(p, 0)
         kp, dsc = sift.detectAndCompute(image, None)
         BOW.add(dsc)
@@ -33,6 +33,6 @@ def train_bow(dictionary_size):
     print "Start of clustering"
     dictionary = BOW.cluster()
     print "End of clustering"
-    fileObject = open("../data/index/visual_vocab", 'wb')
+    fileObject = open("../../data/index/visual_vocab", 'wb')
     pickle.dump(dictionary, fileObject)
     fileObject.close()
