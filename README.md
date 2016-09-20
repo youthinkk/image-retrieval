@@ -28,11 +28,11 @@ A web app to index, match and retrieve images based on a range of visual, concep
 * [retrieval/src/](/retrieval/src) : Algorithms for indexing, matching and retrieving images
 * [templates/](/templates) : HTML for the web pages
 
+### Size of Data
+*Train Data (30 * 50 = 1500 Images)
+*Test Data (30 * 10 = 300 Images)
+
 # Authors
 * [Wu Yu Ting](https://github.com/youthinkk)
 * [Jiang Hongchao](https://github.com/jianghc93)
 * [Donald Shum](https://github.com/donaldshum)
-
-# Train Data (30 * 50 = 1500 Images)
-
-# Test Data (30 * 10 = 300 Images)
