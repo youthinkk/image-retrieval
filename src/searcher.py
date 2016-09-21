@@ -4,7 +4,6 @@ from src.core import describe_color, color_similarity
 from src.core import inference, learning_similarity
 from src.core import SIFTDescriptor
 from src.file import get_index
-import time
 
 K_SIZE = 16
 TRAIN_COLOR_INDEX_PATH = "../data/index/train_histogram.csv"
@@ -38,7 +37,6 @@ class Searcher:
         # Compute deep learning predictions of query image
         predictions = inference(query_path)
 
-        start = time.time()
         for file_name, train_value in self.train_color_dict.iteritems():
             train_label = train_value[0]
             train_color = train_value[1]
@@ -52,6 +50,4 @@ class Searcher:
             results.append((score, file_name))
 
         top_k = sorted(results, key=lambda x: x[0], reverse=True)[:K_SIZE]
-        end = time.time()
-        print "Search time: %s" % str(end - start)
         return top_k

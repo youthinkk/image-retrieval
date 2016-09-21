@@ -2,6 +2,7 @@ from Tkinter import *
 import tkFileDialog
 from PIL import Image, ImageTk
 from searcher import Searcher
+import time
 
 
 class UI_class:
@@ -50,7 +51,10 @@ class UI_class:
         self.result_img_frame.pack()
 
         # perform the search
+        start = time.time()
         results = self.searcher.retrieve_images(self.filename)
+        end = time.time()
+        print "Search time: %s" % str(end - start)
 
         # show result pictures
         COLUMNS = 5
