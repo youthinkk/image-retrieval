@@ -1,8 +1,10 @@
 import cv2
 import numpy as np
-from src.core import describe_color, color_similarity
-from src.core import inference, learning_similarity
+import time
+from src.core import describe_color
+from src.core import LearningDescriptor
 from src.core import SIFTDescriptor
+from src.core import compute_similarity
 from src.file import get_index
 
 K_SIZE = 16
@@ -20,6 +22,7 @@ class Searcher:
         self.train_color_dict = get_index(TRAIN_COLOR_INDEX_PATH)
         self.train_sift_dict = get_index(TRAIN_SIFT_INDEX_PATH)
         self.sift_descriptor = SIFTDescriptor(VISUAL_VOCABULARY_PATH)
+        self.learning_descriptor = LearningDescriptor()
 
     def calculate_score(self, similarities):
         return np.inner(self.weights, similarities)
@@ -35,16 +38,18 @@ class Searcher:
         query_sift = self.sift_descriptor.describe(cv2.cvtColor(query_image, 0))
 
         # Compute deep learning predictions of query image
-        predictions = inference(query_path)
+        start = time.clock()
+        predictions = self.learning_descriptor.inference(query_path)
+        print "time taken for prediction: ", time.clock() - start
 
         for file_name, train_value in self.train_color_dict.iteritems():
             train_label = train_value[0]
             train_color = train_value[1]
 
             # Compute similarity of different features
-            color_sim = color_similarity(query_color, train_color)
-            sift_sim = color_similarity(query_sift, self.train_sift_dict.get(file_name)[1])
-            learning_sim = learning_similarity(predictions, train_label)
+            color_sim = compute_similarity(query_color, train_color)
+            sift_sim = compute_similarity(query_sift, self.train_sift_dict.get(file_name)[1])
+            learning_sim = self.learning_descriptor.learning_similarity(predictions, train_label)
 
             score = self.calculate_score([color_sim, sift_sim, learning_sim])
             results.append((score, file_name))

@@ -33,47 +33,6 @@ tf.app.flags.DEFINE_string('MODEL_DIR', '/tmp/imagenet',
 DATA_URL = 'http://download.tensorflow.org/models/image/imagenet/inception-2015-12-05.tgz'
 
 
-def create_graph():
-    """
-    Create a graph from saved GraphDef file and returns a saver.
-    """
-    download_model()
-    # Creates graph from saved graph_def.pb.
-    with tf.gfile.FastGFile(os.path.join(FLAGS.MODEL_DIR, 'classify_image_graph_def.pb'), 'rb') as f:
-        graph_def = tf.GraphDef()
-        graph_def.ParseFromString(f.read())
-        _ = tf.import_graph_def(graph_def, name='')
-
-
-def inference(image_path):
-    """
-    Run inference on an image.
-    """
-    if not tf.gfile.Exists(image_path):
-        tf.logging.fatal('File does not exist %s', image_path)
-    image_data = tf.gfile.FastGFile(image_path, 'rb').read()
-
-    # Creates graph from saved GraphDef.
-    create_graph()
-
-    with tf.Session() as sess:
-        softmax_tensor = sess.graph.get_tensor_by_name('softmax:0')
-        predictions = sess.run(softmax_tensor, {'DecodeJpeg/contents:0': image_data})
-        predictions = np.squeeze(predictions)
-
-        return predictions
-
-
-def learning_similarity(predictions, target_label):
-    index = load_index(target_label)
-    max_probability = 0.
-
-    for i in xrange(len(index)):
-        max_probability = max(max_probability, predictions[index[i]])
-
-    return max_probability
-
-
 def download_model():
     """
     Download and extract model tar file.
@@ -95,3 +54,43 @@ def download_model():
         print "\nSuccessfully downloaded ", file_name, stat_info.st_size, "bytes."
 
     tarfile.open(file_path, 'r:gz').extractall(destination_directory)
+
+
+class LearningDescriptor:
+    def __init__(self):
+        download_model()
+        self.create_graph()
+
+    def create_graph(self):
+        """
+        Create a graph from saved GraphDef file and returns a saver.
+        """
+        # Creates graph from saved graph_def.pb.
+        with tf.gfile.FastGFile(os.path.join(FLAGS.MODEL_DIR, 'classify_image_graph_def.pb'), 'rb') as f:
+            graph_def = tf.GraphDef()
+            graph_def.ParseFromString(f.read())
+            _ = tf.import_graph_def(graph_def, name='')
+
+    def inference(self, image_path):
+        """
+        Run inference on an image.
+        """
+        if not tf.gfile.Exists(image_path):
+            tf.logging.fatal('File does not exist %s', image_path)
+        image_data = tf.gfile.FastGFile(image_path, 'rb').read()
+
+        with tf.Session() as sess:
+            softmax_tensor = sess.graph.get_tensor_by_name('softmax:0')
+            predictions = sess.run(softmax_tensor, {'DecodeJpeg/contents:0': image_data})
+            predictions = np.squeeze(predictions)
+
+            return predictions
+
+    def learning_similarity(self, predictions, target_label):
+        index = load_index(target_label)
+        max_probability = 0.
+
+        for i in xrange(len(index)):
+            max_probability = max(max_probability, predictions[index[i]])
+
+        return max_probability

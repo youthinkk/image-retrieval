@@ -5,7 +5,7 @@ from searcher import Searcher
 import time
 
 
-class UI_class:
+class GUI:
     def __init__(self, master, search_path):
         self.search_path = search_path
         self.master = master
@@ -14,16 +14,15 @@ class UI_class:
         topframe = Frame(self.master)
         topframe.pack()
 
-        #Buttons
+        # Buttons
         topspace = Label(topframe).grid(row=0, columnspan=2)
-        self.bbutton= Button(topframe, text=" Choose an image ", command=self.browse_query_img)
+        self.bbutton = Button(topframe, text=" Choose an image ", command=self.browse_query_img)
         self.bbutton.grid(row=1, column=1)
         self.cbutton = Button(topframe, text=" Search ", command=self.show_results_imgs)
         self.cbutton.grid(row=1, column=2)
         downspace = Label(topframe).grid(row=3, columnspan=4)
 
         self.master.mainloop()
-
 
     def browse_query_img(self):
         try:
@@ -63,7 +62,7 @@ class UI_class:
             # load the result image and display it
             image_count += 1
             r, c = divmod(image_count - 1, COLUMNS)
-            im = Image.open( self.search_path + "/" + resultID)
+            im = Image.open(self.search_path + "/" + resultID)
             resized = im.resize((100, 100), Image.ANTIALIAS)
             tkimage = ImageTk.PhotoImage(resized)
             myvar = Label(self.result_img_frame, image=tkimage)
@@ -72,5 +71,6 @@ class UI_class:
 
         self.result_img_frame.mainloop()
 
+
 root = Tk()
-window = UI_class(root,'../data/train/')
+window = GUI(root, '../data/train/')
