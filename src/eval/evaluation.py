@@ -1,7 +1,7 @@
 import numpy as np
 from src.file import get_index
-from src.core import color_similarity
-from src.core import inference, learning_similarity
+from src.core import compute_similarity
+from src.core import LearningDescriptor, learning_similarity
 
 K_SIZE = 16
 
@@ -18,13 +18,13 @@ WEIGHTS = np.array([1, 2, 3])
 
 
 def avep(top_k, test_label):
-    num_relevant = 0
-    total = 0
+    num_relevant = 0.
+    total = 0.
     for i in xrange(K_SIZE):
-        label = top_k[i][0]
+        label = top_k[i][1]
         if label == test_label:
             num_relevant += 1
-            total += num_relevant / i
+            total += num_relevant / (i + 1)
 
     if num_relevant == 0:
         return 0
@@ -41,6 +41,7 @@ def eval():
     train_color_dict = get_index(TRAIN_COLOR_INDEX_PATH)
     test__sift_dict = get_index(TEST_SIFT_INDEX_PATH)
     train_sift_dict = get_index(TRAIN_SIFT_INDEX_PATH)
+    learning_descriptor = LearningDescriptor()
 
     results = []
     total = 0
@@ -56,25 +57,24 @@ def eval():
         query_sift = test__sift_dict.get(test_name)[1]
 
         # Compute deep learning predictions of query image
-        predictions = inference("../../data/test/" + test_name)
+        predictions = learning_descriptor.inference("../../data/test/" + test_name)
 
         for file_name, train_value in train_color_dict.iteritems():
             train_label = train_value[0]
             train_color = train_value[1]
 
             # Compute similarity of different features
-            color_sim = color_similarity(query_color, train_color)
-            sift_sim = color_similarity(query_sift, train_sift_dict.get(file_name)[1])
+            color_sim = compute_similarity(query_color, train_color)
+            sift_sim = compute_similarity(query_sift, train_sift_dict.get(file_name)[1])
             learning_sim = learning_similarity(predictions, train_label)
 
             score = calculate_score([color_sim, sift_sim, learning_sim])
-            results.append((score, file_name))
+            results.append((score, train_label))
 
         top_k = sorted(results, key=lambda x: x[0], reverse=True)[:K_SIZE]
         total += avep(top_k, test_label)
-        break
 
-    print "MAP: %.6f" % (total / 300)
+    print "MAP: %.10f" % (total / 300)
 
 
 
