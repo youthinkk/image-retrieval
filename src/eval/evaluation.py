@@ -1,7 +1,7 @@
 import numpy as np
 from src.file import get_index
 from src.core import compute_similarity
-from src.core import LearningDescriptor, learning_similarity
+from src.core import learning_similarity
 
 K_SIZE = 16
 
