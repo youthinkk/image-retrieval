@@ -23,8 +23,12 @@ def bhattacharyya_distance(feature1, feature2):
 
 def chi2_distance(feature1, feature2, eps=1e-10):
     # compute the chi-squared distance
-    distance = 0.5 * np.sum([((a - b) ** 2) / (a + b + eps)
-                             for (a, b) in zip(feature1, feature2)])
+    feature1 = np.array(feature1)
+    feature2 = np.array(feature2)
+
+    numerator = np.square(feature1 - feature2).astype(float)
+    denominator = np.add(feature1 + feature2, eps).astype(float)
+    distance = 0.5 * np.sum(numerator/denominator)
 
     # return the chi-squared distance
     return distance

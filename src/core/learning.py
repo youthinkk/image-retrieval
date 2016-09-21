@@ -56,6 +56,16 @@ def download_model():
     tarfile.open(file_path, 'r:gz').extractall(destination_directory)
 
 
+def learning_similarity(predictions, target_label):
+    index = load_index(target_label)
+    max_probability = 0.
+
+    for i in xrange(len(index)):
+        max_probability = max(max_probability, predictions[index[i]])
+
+    return max_probability
+
+
 class LearningDescriptor:
     def __init__(self):
         download_model()
@@ -85,12 +95,3 @@ class LearningDescriptor:
             predictions = np.squeeze(predictions)
 
             return predictions
-
-    def learning_similarity(self, predictions, target_label):
-        index = load_index(target_label)
-        max_probability = 0.
-
-        for i in xrange(len(index)):
-            max_probability = max(max_probability, predictions[index[i]])
-
-        return max_probability
