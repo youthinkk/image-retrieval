@@ -20,6 +20,10 @@ class GUI:
         self.bbutton.grid(row=1, column=1)
         self.cbutton = Button(topframe, text=" Search ", command=self.show_results_imgs)
         self.cbutton.grid(row=1, column=2)
+        taglabel = Label(topframe, text="Tags ")
+        taglabel.grid(row=2, column=1)
+        self.tagbox = Entry(topframe)
+        self.tagbox.grid(row=2, column=2)
         downspace = Label(topframe).grid(row=3, columnspan=4)
 
         self.master.mainloop()
@@ -46,6 +50,7 @@ class GUI:
         self.query_img_frame.mainloop()
 
     def show_results_imgs(self):
+        tags = self.tagbox.get()
         self.result_img_frame = Frame(self.master)
         self.result_img_frame.pack()
 
