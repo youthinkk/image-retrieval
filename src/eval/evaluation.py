@@ -14,17 +14,22 @@ TEST_SIFT_INDEX_PATH = INDEX_FOLDER + "/test_sift.csv"
 # To test color only use [1, 0, 0]
 # To test sift only use [0, 1, 0]
 # To test deep learning only use [0, 0, 1]
-WEIGHTS = np.array([1,2,3])
+WEIGHTS = np.array([1, 2, 3])
 
 
-def num_relevant(top_k, test_label):
-    local_sum = 0.
+def avep(top_k, test_label):
+    num_relevant = 0
+    total = 0
     for i in xrange(K_SIZE):
         label = top_k[i][0]
         if label == test_label:
-            local_sum += 1
+            num_relevant += 1
+            total += num_relevant / i
 
-    return local_sum
+    if num_relevant == 0:
+        return 0
+
+    return total / num_relevant
 
 
 def calculate_score(similarities):
@@ -38,8 +43,7 @@ def eval():
     train_sift_dict = get_index(TRAIN_SIFT_INDEX_PATH)
 
     results = []
-    total_precision = 0
-    total_recall = 0
+    total = 0
 
     for test_name, test_value in test_color_dict.iteritems():
         test_label = test_value[0]
@@ -67,13 +71,10 @@ def eval():
             results.append((score, file_name))
 
         top_k = sorted(results, key=lambda x: x[0], reverse=True)[:K_SIZE]
-        nr = num_relevant(top_k, test_label)
-        total_precision += (nr / K_SIZE)
-        total_recall += (nr / 50)
+        total += avep(top_k, test_label)
+        break
 
-    avg_precision = total_precision / 300
-    avg_recall = total_recall / 300
-    print "F1 Score: %.6f" % ((2 * avg_precision * avg_recall) / (avg_precision + avg_recall))
+    print "MAP: %.6f" % (total / 300)
 
 
 
@@ -84,7 +85,7 @@ def eval():
 # Using chi2 distance: 0.0358333333333
 # print "Color histogram accuracy: ", eval_color()
 
-print "F1 accuracy: ", eval()
+eval()
 
 
 
