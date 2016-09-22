@@ -106,11 +106,8 @@ print "Overall: ", evaluation.run(WEIGHTS)
 
 for i in xrange(WEIGHTS_TRAINING_SIZE):
     w = []
-    w.append(0)
-    for _ in xrange(1):     # Number of features
-        w.append(random.uniform(0.1, 10.0))
-    for _ in xrange(1):     # Number of features
-        w.append(random.uniform(w[1], 50.0))
+    for _ in xrange(3):     # Number of features
+        w.append(random.uniform(0.1, 50.0))
 
     MAP = evaluation.run(w)
 
