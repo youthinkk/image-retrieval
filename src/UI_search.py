@@ -18,13 +18,31 @@ class GUI:
         topspace = Label(topframe).grid(row=0, columnspan=2)
         self.bbutton = Button(topframe, text=" Choose an image ", command=self.browse_query_img)
         self.bbutton.grid(row=1, column=1)
-        self.cbutton = Button(topframe, text=" Search ", command=self.show_results_imgs)
-        self.cbutton.grid(row=1, column=2)
+        self.cbutton = Button(topframe, text=" Search ", command=self.show_results_imgs, width=20, bd=3)
+        self.cbutton.grid(row=1, column=3)
+
+        self.ch = IntVar()
+        self.vw = IntVar()
+        self.dl = IntVar()
+
+        # check everything
+        self.ch.set(1)
+        self.vw.set(1)
+        self.dl.set(1)
+
+        ch_checkbox = Checkbutton(topframe, text="CH", variable=self.ch, onvalue=1, offvalue=0, height=5)
+        vw_checkbox = Checkbutton(topframe, text="VW", variable=self.vw, onvalue=1, offvalue=0, height=5)
+        dl_checkbox = Checkbutton(topframe, text="DL", variable=self.dl, onvalue=1, offvalue=0, height=5)
+
+        ch_checkbox.grid(row=2, column=1)
+        vw_checkbox.grid(row=2, column=2)
+        dl_checkbox.grid(row=2, column=3)
+
         taglabel = Label(topframe, text="Tags ")
-        taglabel.grid(row=2, column=1)
+        taglabel.grid(row=3, column=1)
         self.tagbox = Entry(topframe)
-        self.tagbox.grid(row=2, column=2)
-        downspace = Label(topframe).grid(row=3, columnspan=4)
+        self.tagbox.grid(row=3, column=2)
+        downspace = Label(topframe).grid(row=4, columnspan=4)
 
         self.master.mainloop()
 
@@ -50,6 +68,12 @@ class GUI:
         self.query_img_frame.mainloop()
 
     def show_results_imgs(self):
+        try:
+            self.result_img_frame.destroy()
+        except AttributeError:
+            None
+
+        self.searcher.weights *= [self.ch.get(), self.vw.get(), self.dl.get()]
         tags = self.tagbox.get()
         self.result_img_frame = Frame(self.master)
         self.result_img_frame.pack()
