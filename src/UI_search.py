@@ -10,6 +10,7 @@ class GUI:
         self.search_path = search_path
         self.master = master
         self.searcher = Searcher()
+        self.default_weights = self.searcher.weights
 
         topframe = Frame(self.master)
         topframe.pack()
@@ -73,7 +74,7 @@ class GUI:
         except AttributeError:
             None
 
-        self.searcher.weights *= [self.ch.get(), self.vw.get(), self.dl.get()]
+        self.searcher.weights = self.default_weights * [self.ch.get(), self.vw.get(), self.dl.get()]
         tags = self.tagbox.get()
         self.result_img_frame = Frame(self.master)
         self.result_img_frame.pack()
