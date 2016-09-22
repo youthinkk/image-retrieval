@@ -39,3 +39,19 @@ def compute_similarity(feature1, feature2):
     Compare the similarity of two images
     """
     return 1 - chi2_distance(feature1, feature2)
+
+
+def remove_duplicate(results):
+    new_results = []
+    image_id = {}
+    regex = "_"
+
+    for i in xrange(len(results)):
+        score = results[i][0]
+        file_name = results[i][1]
+        unique_id = regex.join(file_name.split(regex)[:2])
+        if unique_id not in image_id:
+            image_id[unique_id] = None
+            new_results.append((score, file_name))
+
+    return new_results

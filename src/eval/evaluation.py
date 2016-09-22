@@ -1,7 +1,8 @@
+import random
 import numpy as np
 from src.file import get_index
-from src.core import compute_similarity
 from src.core import learning_similarity
+from src.core import compute_similarity, remove_duplicate
 
 K_SIZE = 16
 
@@ -12,8 +13,10 @@ TEST_COLOR_INDEX_PATH = INDEX_FOLDER + "/test_histogram.csv"
 TRAIN_SIFT_INDEX_PATH = INDEX_FOLDER + "/train_sift.csv"
 TEST_SIFT_INDEX_PATH = INDEX_FOLDER + "/test_sift.csv"
 TEST_LEARNING_INDEX_PATH = INDEX_FOLDER + "/test_learning.csv"
+WEIGHTS_INDEX_PATH = "../../data/weights.csv"
 
-WEIGHTS = np.array([1, 2, 3])
+WEIGHTS = np.array([0.31661541, 41.0648735, 37.03619571])
+WEIGHTS_TRAINING_SIZE = 1000
 
 
 def avep(top_k, truth_label):
@@ -77,7 +80,9 @@ class Evaluation:
                 score = calculate_score(weights, [color_sim, sift_sim, learning_sim])
                 results.append((score, train_label))
 
-            top_k = sorted(results, key=lambda x: x[0], reverse=True)[:K_SIZE]
+            results = sorted(results, key=lambda x: x[0], reverse=True)
+            results = remove_duplicate(results)
+            top_k = results[:K_SIZE]
             total += avep(top_k, test_label)
 
         return "%.10f" % (total / test_size)
@@ -97,6 +102,17 @@ print "Deep learning: ", evaluation.run([0, 0, 1])
 # Overall accuracy
 print "Overall: ", evaluation.run(WEIGHTS)
 
+# Find most optimal accuracy
+for i in xrange(WEIGHTS_TRAINING_SIZE):
+    w = []
+    for _ in xrange(3):     # Number of features
+        w.append(random.uniform(0.1, 50.0))
+
+    MAP = evaluation.run(w)
+
+    with open(WEIGHTS_INDEX_PATH, "a") as weight_path:
+        weight_path.write("%s,%s\n" % (str(np.array(w)), str(MAP)))
+    print "Iteration ", (i+1), ": ", MAP
 
 
 #################################################################

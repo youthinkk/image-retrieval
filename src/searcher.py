@@ -3,14 +3,14 @@ import numpy as np
 from src.core import describe_color
 from src.core import LearningDescriptor, learning_similarity
 from src.core import SIFTDescriptor
-from src.core import compute_similarity
+from src.core import compute_similarity, remove_duplicate
 from src.file import get_index
 
 K_SIZE = 16
 TRAIN_COLOR_INDEX_PATH = "../data/index/train_histogram.csv"
 TRAIN_SIFT_INDEX_PATH = "../data/index/train_sift.csv"
 VISUAL_VOCABULARY_PATH = "../data/index/visual_vocab"
-WEIGHTS = np.array([1, 2, 3])
+WEIGHTS = np.array([0.31661541, 41.0648735, 37.03619571])
 
 
 class Searcher:
@@ -50,7 +50,9 @@ class Searcher:
             score = self.calculate_score([color_sim, sift_sim, learning_sim])
             results.append((score, self.train_file_names[i]))
 
-        top_k = sorted(results, key=lambda x: x[0], reverse=True)[:K_SIZE]
+        results = sorted(results, key=lambda x: x[0], reverse=True)
+        results = remove_duplicate(results)
+        top_k = results[:K_SIZE]
         return top_k
 
     def calculate_score(self, similarities):
