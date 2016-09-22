@@ -10,28 +10,28 @@ TEST_FOLDER = "../../data/test/"
 INDEX_FOLDER = "../../data/index"
 TRAIN_COLOR_INDEX_PATH = INDEX_FOLDER + "/train_histogram.csv"
 TEST_COLOR_INDEX_PATH = INDEX_FOLDER + "/test_histogram.csv"
-TRAIN_SIFT_INDEX_PATH = INDEX_FOLDER + "/train_sift.csv"
-TEST_SIFT_INDEX_PATH = INDEX_FOLDER + "/test_sift.csv"
+TRAIN_SIFT_INDEX_PATH = INDEX_FOLDER + "/train_sift_622.csv"
+TEST_SIFT_INDEX_PATH = INDEX_FOLDER + "/test_sift_622.csv"
 TEST_LEARNING_INDEX_PATH = INDEX_FOLDER + "/test_learning.csv"
 WEIGHTS_INDEX_PATH = "../../data/weights.csv"
 
-WEIGHTS = np.array([0.31661541, 41.0648735, 37.03619571])
+WEIGHTS = np.array([0.84757445, 3.67971924, 48.4926241])
 WEIGHTS_TRAINING_SIZE = 1000
 
 
-def avep(top_k, truth_label):
+def average_precision(top_k, truth_label):
     num_relevant = 0.
-    total = 0.
+    total_precision = 0.
     for i in xrange(K_SIZE):
         label = top_k[i][1]
         if label == truth_label:
             num_relevant += 1
-            total += num_relevant / (i + 1)
+            total_precision += num_relevant / (i + 1)
 
     if num_relevant == 0:
         return 0
 
-    return total / num_relevant
+    return total_precision / num_relevant
 
 
 def calculate_score(weights, similarities):
@@ -83,7 +83,7 @@ class Evaluation:
             results = sorted(results, key=lambda x: x[0], reverse=True)
             results = remove_duplicate(results)
             top_k = results[:K_SIZE]
-            total += avep(top_k, test_label)
+            total += average_precision(top_k, test_label)
 
         return "%.10f" % (total / test_size)
 
@@ -103,16 +103,21 @@ print "Deep learning: ", evaluation.run([0, 0, 1])
 print "Overall: ", evaluation.run(WEIGHTS)
 
 # Find most optimal accuracy
+
 for i in xrange(WEIGHTS_TRAINING_SIZE):
     w = []
-    for _ in xrange(3):     # Number of features
-        w.append(random.uniform(0.1, 50.0))
+    w.append(0)
+    for _ in xrange(1):     # Number of features
+        w.append(random.uniform(0.1, 10.0))
+    for _ in xrange(1):     # Number of features
+        w.append(random.uniform(w[1], 50.0))
 
     MAP = evaluation.run(w)
 
     with open(WEIGHTS_INDEX_PATH, "a") as weight_path:
         weight_path.write("%s,%s\n" % (str(np.array(w)), str(MAP)))
     print "Iteration ", (i+1), ": ", MAP
+
 
 
 #################################################################

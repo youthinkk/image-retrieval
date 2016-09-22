@@ -8,14 +8,14 @@ from src.file import get_index
 
 K_SIZE = 16
 TRAIN_COLOR_INDEX_PATH = "../data/index/train_histogram.csv"
-TRAIN_SIFT_INDEX_PATH = "../data/index/train_sift.csv"
-VISUAL_VOCABULARY_PATH = "../data/index/visual_vocab"
-WEIGHTS = np.array([0.31661541, 41.0648735, 37.03619571])
+TRAIN_SIFT_INDEX_PATH = "../data/index/train_sift_622.csv"
+VISUAL_VOCABULARY_PATH = "../data/index/visual_vocab_622"
+DEFAULT_WEIGHTS = np.array([0.84757445, 3.67971924, 48.4926241])
 
 
 class Searcher:
 
-    def __init__(self, weights=WEIGHTS):
+    def __init__(self, weights=DEFAULT_WEIGHTS):
         self.weights = weights
         self.sift_descriptor = SIFTDescriptor(VISUAL_VOCABULARY_PATH)
         self.learning_descriptor = LearningDescriptor()
@@ -57,3 +57,9 @@ class Searcher:
 
     def calculate_score(self, similarities):
         return np.inner(self.weights, similarities)
+
+    def set_weights(self, weights):
+        self.weights = weights
+
+    def get_weights(self):
+        return self.weights
