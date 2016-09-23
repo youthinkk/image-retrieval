@@ -2,7 +2,7 @@ import random
 import numpy as np
 from src.file import get_index
 from src.core import learning_similarity
-from src.core import compute_similarity, remove_duplicate
+from src.core import color_similarity, sift_similarity, remove_duplicate
 
 K_SIZE = 16
 
@@ -73,8 +73,8 @@ class Evaluation:
                 train_color = train_value[1]
 
                 # Compute similarity of different features
-                color_sim = compute_similarity(query_color, train_color)
-                sift_sim = compute_similarity(query_sift, self.train_sift_dict.get(file_name)[1])
+                color_sim = color_similarity(query_color, train_color)
+                sift_sim = sift_similarity(query_sift, self.train_sift_dict.get(file_name)[1])
                 learning_sim = learning_similarity(predictions, train_label)
 
                 score = calculate_score(weights, [color_sim, sift_sim, learning_sim])
@@ -103,7 +103,7 @@ print "Deep learning: ", evaluation.run([0, 0, 1])
 print "Overall: ", evaluation.run(WEIGHTS)
 
 # Find most optimal accuracy
-
+"""
 for i in xrange(WEIGHTS_TRAINING_SIZE):
     w = []
     for _ in xrange(3):     # Number of features
@@ -114,7 +114,7 @@ for i in xrange(WEIGHTS_TRAINING_SIZE):
     with open(WEIGHTS_INDEX_PATH, "a") as weight_path:
         weight_path.write("%s,%s\n" % (str(np.array(w)), str(MAP)))
     print "Iteration ", (i+1), ": ", MAP
-
+"""
 
 
 #################################################################

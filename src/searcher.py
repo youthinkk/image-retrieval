@@ -3,7 +3,7 @@ import numpy as np
 from src.core import describe_color
 from src.core import LearningDescriptor, learning_similarity
 from src.core import SIFTDescriptor
-from src.core import compute_similarity, remove_duplicate
+from src.core import color_similarity, sift_similarity, remove_duplicate
 from src.file import get_index
 
 K_SIZE = 16
@@ -43,8 +43,8 @@ class Searcher:
         predictions = self.learning_descriptor.inference(query_path)
 
         for i in xrange(self.train_length):
-            color_sim = compute_similarity(query_color, self.train_colors[i])
-            sift_sim = compute_similarity(query_sift, self.train_sifts[i])
+            color_sim = color_similarity(query_color, self.train_colors[i])
+            sift_sim = sift_similarity(query_sift, self.train_sifts[i])
             learning_sim = learning_similarity(predictions, self.train_labels[i])
 
             score = self.calculate_score([color_sim, sift_sim, learning_sim])
