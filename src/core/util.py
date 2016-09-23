@@ -2,6 +2,14 @@ import math
 import numpy as np
 
 
+def euclidean_distance(feature1, feature2):
+    feature1 = np.array(feature1)
+    feature2 = np.array(feature2)
+    sum_distance = np.sum(np.power(feature1 - feature2, 2.0))
+
+    return math.sqrt(sum_distance)
+
+
 def bhattacharyya_distance(feature1, feature2):
     """
     Calculate distance between two histograms using
