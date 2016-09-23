@@ -52,17 +52,28 @@ def singleQueryTrainText(query, matched, train_list):
 
         #adding matched images into dictionary under the key of the matched keyword
         while (j < single_list_len):
-            if (query.lower() in train_list[i][j].lower()) and (not matched.has_key(train_list[i][j])): #new key
-                matched[train_list[i][j]] = [train_list[i][0].replace('.jpg','')] #make a list in the key
+            if (query.lower() in train_list[i][j].lower()) and (not matched.has_key(train_list[i][0].replace('.jpg',''))): #new key
+                matched[train_list[i][0].replace('.jpg','')] = 1 #make a list in the key
                 j += 1
-            elif (query.lower() in train_list[i][j].lower()) and (matched.has_key(train_list[i][j])): #existing key
-                matched[train_list[i][j]].append(train_list[i][0].replace('.jpg',''))
+            elif (query.lower() in train_list[i][j].lower()) and (matched.has_key(train_list[i][0].replace('.jpg',''))): #existing key
+                matched[train_list[i][0].replace('.jpg','')] += 1
                 j += 1
             else:
                 j += 1
         i += 1
 
     return matched
+
+def topNlist(dict, N): #place N number of top search images in list of descending order
+    count = 0
+    list_out = []
+    for w in sorted(dict, key=dict.get, reverse=True): #store up to top 20 most relevant images into out
+        #print w, dict[w]
+        list_out.append(w)
+        count += 1
+        if count >= N:
+            break
+    return list_out
 
 #free text search
 def freeTextSearch(string_query):
@@ -80,13 +91,18 @@ def freeTextSearch(string_query):
     full_query_list = input_query_list #define a full query list which will include all synonym
     for i in range(len(input_query_list)):
         full_query_list = full_query_list + toString(synonym(input_query_list[i]))
-    full_query_list = list(set(full_query_list)) #this is the COMPLETE set of queries
+    full_query_list = list(set(full_query_list)) #this is the COMPLETE set of queries w/o duplicates
 
-    index = {} #initialize empty index to be updated
+    train_index = {} #initialize empty index to be updated
+    test_index = {}
+    print full_query_list
+    for i in range(len(full_query_list)): #run through all the queries and return a dictionary
+        train_index = singleQueryTrainText(full_query_list[i], train_index, train_list)
+        test_index = singleQueryTrainText(full_query_list[i], test_index, test_list)
 
+    #print index
 
-    test = singleQueryTrainText("bird", index, train_list)
-    print test
+    train_out = topNlist(train_index, 20)
+    test_out = topNlist(test_index, 20)
 
-
-    return string_query
+    return train_out, test_out
