@@ -84,14 +84,13 @@ def freeTextSearch(string_query):
 
     s = set(stopwords.words('english')) #set for stemming
     input_query_list = filter(lambda w: not w in s, string_query.split()) #list of non stop words
-    for i in range(len(input_query_list)): #stem and resolve all query words
-        input_query_list[i] = stem(input_query_list[i])
-    input_query_list = list(set(input_query_list)) #remove duplicates
-
     full_query_list = input_query_list #define a full query list which will include all synonym
     for i in range(len(input_query_list)):
         full_query_list = full_query_list + toString(synonym(input_query_list[i]))
-    full_query_list = list(set(full_query_list)) #this is the COMPLETE set of queries w/o duplicates
+
+    for i in range(len(full_query_list)): #stem and resolve all query words
+        full_query_list[i] = stem(full_query_list[i])
+    full_query_list = list(set(full_query_list))  # this is the COMPLETE set of queries w/o duplicates
 
     train_index = {} #initialize empty index to be updated
     test_index = {}
