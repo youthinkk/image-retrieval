@@ -15,7 +15,7 @@ TEST_SIFT_INDEX_PATH = INDEX_FOLDER + "/test_sift_622.csv"
 TEST_LEARNING_INDEX_PATH = INDEX_FOLDER + "/test_learning.csv"
 WEIGHTS_INDEX_PATH = "../../data/weights.csv"
 
-WEIGHTS = np.array([0.84757445, 3.67971924, 48.4926241])
+WEIGHTS = np.array([7.87123598, 7.29097985, 33.38541097])
 WEIGHTS_TRAINING_SIZE = 1000
 
 
@@ -103,7 +103,6 @@ print "Deep learning: ", evaluation.run([0, 0, 1])
 print "Overall: ", evaluation.run(WEIGHTS)
 
 # Find most optimal accuracy
-"""
 for i in xrange(WEIGHTS_TRAINING_SIZE):
     w = []
     for _ in xrange(3):     # Number of features
@@ -114,7 +113,6 @@ for i in xrange(WEIGHTS_TRAINING_SIZE):
     with open(WEIGHTS_INDEX_PATH, "a") as weight_path:
         weight_path.write("%s,%s\n" % (str(np.array(w)), str(MAP)))
     print "Iteration ", (i+1), ": ", MAP
-"""
 
 
 #################################################################

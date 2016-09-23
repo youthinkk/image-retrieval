@@ -12,7 +12,7 @@ def get_weights(color_check=1, word_check=1, learning_check=1):
     if sum([color_check, word_check, learning_check]) == 1:
         return np.array([color_check, word_check, learning_check])
     elif sum([color_check, word_check, learning_check]) == 3:
-        return np.array([0.84757445, 3.67971924, 48.4926241])
+        return np.array([7.87123598, 7.29097985, 33.38541097])
     elif color_check and word_check:
         return np.array([2.03903332, 48.87698212, 0])
     elif color_check and learning_check:
@@ -20,7 +20,7 @@ def get_weights(color_check=1, word_check=1, learning_check=1):
     elif word_check and learning_check:
         return np.array([0, 6.52709701, 33.09908698])
 
-    return np.array([0.84757445, 3.67971924, 48.4926241])
+    return np.array([7.87123598, 7.29097985, 33.38541097])
 
 
 class GUI:
