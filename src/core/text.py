@@ -34,13 +34,15 @@ def synonym(word):
     synonyms = list((set(synonyms)))
     return synonyms
 
-#search for images associated to texts(training data)
-def singleQueryTrainText(query):
-    train_list = processFile("../data/train_text_tags.txt")
-    train_list_len = len(train_list)
+#encode list of unicode to string
+def toString(list):
+    for i in range (len(list)):
+        list[i] = str(list[i])
+    return list
 
-    #dictionary of matched images
-    matched = {}
+#search for images associated to texts(training data)
+def singleQueryTrainText(query, matched, train_list):
+    train_list_len = len(train_list)
 
     i = 0
     while (i < train_list_len): #loop through the entire tags texts
@@ -62,35 +64,11 @@ def singleQueryTrainText(query):
 
     return matched
 
-#search for images associated to texts(test data)
-def singleQueryTestText(query):
-    test_list = processFile("../data/test_text_tags.txt")
-    test_list_len = len(test_list)
-
-    #dictionary of matched images
-    matched = {}
-
-    i = 0
-    while (i < test_list_len): #loop through the entire tags texts
-
-        j = 1
-        single_list_len = len(test_list[i]) #loop through single line
-
-        while (j < single_list_len):
-            if (query.lower() in test_list[i][j].lower()) and (not matched.has_key(test_list[i][j])): #new key
-                matched[test_list[i][j]] = [test_list[i][0].replace('.jpg','')] #make a list in the key
-                j += 1
-            elif (query.lower() in test_list[i][j].lower()) and (matched.has_key(test_list[i][j])): #existing key
-                matched[test_list[i][j]].append(test_list[i][0].replace('.jpg',''))
-                j += 1
-            else:
-                j += 1
-        i += 1
-
-    return matched
-
 #free text search
 def freeTextSearch(string_query):
+    train_list = processFile("../data/train_text_tags.txt")
+    test_list = processFile("../data/test_text_tags.txt")
+
     syns = wordnet.synsets("program")
 
     s = set(stopwords.words('english')) #set for stemming
@@ -101,15 +79,14 @@ def freeTextSearch(string_query):
 
     full_query_list = input_query_list #define a full query list which will include all synonym
     for i in range(len(input_query_list)):
-        full_query_list = full_query_list + synonym(input_query_list[i])
+        full_query_list = full_query_list + toString(synonym(input_query_list[i]))
     full_query_list = list(set(full_query_list)) #this is the COMPLETE set of queries
 
-    #for i in range(len(query_list)): #concat all dictionay to make one big dict
+    index = {} #initialize empty index to be updated
 
 
-    testing1 = singleQueryTrainText(input_query_list[0])
-    testing2 = singleQueryTrainText(input_query_list[3])
-    testing1.update(testing2)
-    #print testing1
+    test = singleQueryTrainText("bird", index, train_list)
+    print test
+
 
     return string_query
