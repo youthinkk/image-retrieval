@@ -124,4 +124,5 @@ class GUI:
 
 
 root = Tk()
+root.title("Image Retrieval")
 window = GUI(root, '../data/train/')
