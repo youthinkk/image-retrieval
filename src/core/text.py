@@ -90,7 +90,7 @@ def genFullImageName(image_list, processed_list):
     return processed_list
 
 #free text search
-def freeTextSearch(string_query):
+def freeTextSearch(string_query, N):
     train_list = processFile("../data/train_text_tags.txt")
     test_list = processFile("../data/test_text_tags.txt")
 
@@ -109,7 +109,7 @@ def freeTextSearch(string_query):
     #     full_query_list = full_query_list + toString(synonym(input_query_list[i]))
 
     for i in range(len(full_query_list)): #stem and resolve all query words
-        full_query_list[i] = stem(full_query_list[i])
+        full_query_list.append(stem(full_query_list[i]))
     full_query_list = list(set(full_query_list))  # this is the COMPLETE set of queries w/o duplicates
 
     train_index = {} #initialize empty index to be updated
@@ -119,8 +119,8 @@ def freeTextSearch(string_query):
         train_index = singleQueryTrainText(full_query_list[i], train_index, train_list)
         test_index = singleQueryTrainText(full_query_list[i], test_index, test_list)
 
-    temp_train_out = topNlist(train_index, 20)
-    temp_test_out = topNlist(test_index, 20)
+    temp_train_out = topNlist(train_index, N)
+    temp_test_out = topNlist(test_index, N)
 
     train_out = genFullImageName(train_image_list, temp_train_out)
     test_out = genFullImageName(test_image_list, temp_test_out)
