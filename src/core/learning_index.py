@@ -1,10 +1,10 @@
 def load_index(label):
     if label == "alley":
-        return class_empty()
+        return class_alley()
     elif label == "antlers":
         return class_antler()
     elif label == "baby":
-        return class_empty()
+        return class_baby()
     elif label == "balloons":
         return class_balloon()
     elif label == "beach":
@@ -34,13 +34,13 @@ def load_index(label):
     elif label == "horses":
         return class_horse()
     elif label == "leaf":
-        return class_empty()
+        return class_leaf()
     elif label == "plane":
         return class_plane()
     elif label == "rainbow":
-        return class_empty()
+        return class_rainbow()
     elif label == "rocks":
-        return class_empty()
+        return class_rock()
     elif label == "sign":
         return class_sign()
     elif label == "snow":
@@ -52,7 +52,7 @@ def load_index(label):
     elif label == "train":
         return class_train()
     elif label == "tree":
-        return class_empty()
+        return class_tree()
     elif label == "whales":
         return class_whale()
     elif label == "window":
@@ -68,6 +68,30 @@ def class_empty():
     For alley, baby, leaf, rainbow, rock and tree
     """
     return []
+
+
+def class_alley():
+    return [702, 990, 690, 686, 685, 701]
+
+
+def class_baby():
+    return [966, 805, 298, 909, 765, 296, 297]
+
+
+def class_leaf():
+    return [328, 327, 332]
+
+
+def class_rainbow():
+    return [712, 992, 235, 368, 366, 367]
+
+
+def class_rock():
+    return [363, 359, 360, 367, 719]
+
+
+def class_tree():
+    return [306, 683, 366, 690, 682, 330]
 
 
 def class_antler():
