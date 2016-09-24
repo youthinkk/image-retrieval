@@ -3,6 +3,8 @@ Template for Text Features
 """
 from stemming.porter2 import stem
 from nltk.corpus import stopwords, wordnet
+from os import listdir
+from os.path import isfile, join
 
 #Specify file path of training and test text tags
 train_Tags = "../data/train_text_tags.txt"
@@ -75,18 +77,36 @@ def topNlist(dict, N): #place N number of top search images in list of descendin
             break
     return list_out
 
+def listOfImages(mypath): #returns a list of images found in the train/test folder
+    onlyfiles = [f for f in listdir(mypath) if isfile(join(mypath, f))]
+    return onlyfiles
+
+def genFullImageName(image_list, processed_list):
+    for i in range(len(processed_list)):
+        for j in range(len(image_list)):
+            if processed_list[i] in image_list[j]:
+                processed_list[i] = image_list[j]
+                break
+    return processed_list
+
 #free text search
 def freeTextSearch(string_query):
     train_list = processFile("../data/train_text_tags.txt")
     test_list = processFile("../data/test_text_tags.txt")
+
+    #list of train and test images
+    train_image_path = "../data/train"
+    test_image_path = "../data/test"
+    train_image_list = listOfImages(train_image_path)
+    test_image_list = listOfImages(test_image_path)
 
     syns = wordnet.synsets("program")
 
     s = set(stopwords.words('english')) #set for stemming
     input_query_list = filter(lambda w: not w in s, string_query.split()) #list of non stop words
     full_query_list = input_query_list #define a full query list which will include all synonym
-    for i in range(len(input_query_list)):
-        full_query_list = full_query_list + toString(synonym(input_query_list[i]))
+    # for i in range(len(input_query_list)):
+    #     full_query_list = full_query_list + toString(synonym(input_query_list[i]))
 
     for i in range(len(full_query_list)): #stem and resolve all query words
         full_query_list[i] = stem(full_query_list[i])
@@ -99,9 +119,10 @@ def freeTextSearch(string_query):
         train_index = singleQueryTrainText(full_query_list[i], train_index, train_list)
         test_index = singleQueryTrainText(full_query_list[i], test_index, test_list)
 
-    #print index
+    temp_train_out = topNlist(train_index, 20)
+    temp_test_out = topNlist(test_index, 20)
 
-    train_out = topNlist(train_index, 20)
-    test_out = topNlist(test_index, 20)
+    train_out = genFullImageName(train_image_list, temp_train_out)
+    test_out = genFullImageName(test_image_list, temp_test_out)
 
     return train_out, test_out
