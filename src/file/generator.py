@@ -89,7 +89,8 @@ def generate_text_index_file(folder_directory, output_path):
         label = image_id.split("_")[-1][:-4]
         raw_id = image_id.replace("_" + label, "")
         if test_tags.has_key(raw_id):
-            test_score[image_id] = tag_descriptor.get_score(test_tags.get(raw_id))
+            score, match = tag_descriptor.get_score(test_tags.get(raw_id))
+            test_score[image_id] = score
 
     fileObject = open(output_path, 'wb')
     pickle.dump(test_score, fileObject)

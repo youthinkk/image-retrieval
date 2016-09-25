@@ -26,7 +26,7 @@ class TagDescriptor:
 
         return filtered
 
-    # returns a score of how well the tags match each category
+    # returns a score of how well the tags match each category and the matched files
     def get_score(self, tags):
         if tags is None:
             tags = []
