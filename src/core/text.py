@@ -3,6 +3,7 @@ Template for Text Features
 """
 import pickle
 import glob
+from stemming.porter2 import stem
 from collections import Counter
 
 
@@ -21,7 +22,7 @@ class TagDescriptor:
         filtered = []
         for word in tags:
             if len(word) > 2 and word.isalpha():
-                filtered.append(word)
+                filtered.append(stem(word).lower())
 
         return filtered
 
@@ -39,7 +40,7 @@ class TagDescriptor:
                 total = 0
                 for stored_tag, weight in self.tag_dict[cat]:
                     for tag in tags:
-                        if stored_tag.lower() == tag.lower():
+                        if stored_tag == tag:
                             total += weight
 
                 score[cat] = total
