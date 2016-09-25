@@ -117,6 +117,7 @@ class GUI:
 
         weights = get_weights(self.color_check.get(), self.word_check.get(), self.learning_check.get(), tag_check)
         self.searcher.set_weights(weights)
+        text_only = self.color_check.get() + self.word_check.get() + self.learning_check.get() == 0
 
 
         self.result_image_frame = Frame(self.master)
@@ -124,7 +125,14 @@ class GUI:
 
         # perform the search
         start = time.time()
-        results = self.searcher.retrieve_images(self.file_name, tags)
+        if text_only or self.file_name is None:
+            try:
+                self.query_image_frame.destroy()
+            except AttributeError:
+                None
+            results = self.searcher.retrieve_by_tags(tags)
+        else:
+            results = self.searcher.retrieve_images(self.file_name, tags)
         end = time.time()
         print "Search time: %s" % str(end - start)
 
