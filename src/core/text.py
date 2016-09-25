@@ -16,7 +16,8 @@ class TagDescriptor:
                            'computer', 'coral', 'dog', 'fish', 'flags', 'flowers', 'horses', 'leaf', 'plane', 'rainbow',
                            'rocks', 'sign', 'snow', 'tiger', 'tower', 'train', 'tree', 'whales', 'window', 'zebra']
 
-    def filter_tags(self, tags):
+    @staticmethod
+    def filter_tags(tags):
         filtered = []
         for word in tags:
             if len(word) > 2 and word.isalpha():

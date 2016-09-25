@@ -1,5 +1,6 @@
 import random
 import numpy as np
+import pickle
 from src.file import get_index
 from src.core import learning_similarity
 from src.core import color_similarity, sift_similarity, remove_duplicate
@@ -10,12 +11,13 @@ TEST_FOLDER = "../../data/test/"
 INDEX_FOLDER = "../../data/index"
 TRAIN_COLOR_INDEX_PATH = INDEX_FOLDER + "/train_histogram.csv"
 TEST_COLOR_INDEX_PATH = INDEX_FOLDER + "/test_histogram.csv"
-TRAIN_SIFT_INDEX_PATH = INDEX_FOLDER + "/train_sift_622.csv"
-TEST_SIFT_INDEX_PATH = INDEX_FOLDER + "/test_sift_622.csv"
+TRAIN_SIFT_INDEX_PATH = INDEX_FOLDER + "/train_sift.csv"
+TEST_SIFT_INDEX_PATH = INDEX_FOLDER + "/test_sift.csv"
 TEST_LEARNING_INDEX_PATH = INDEX_FOLDER + "/test_learning.csv"
+TEST_TAG_SCORE_PATH = INDEX_FOLDER + "/test_tag_score"
 WEIGHTS_INDEX_PATH = "../../data/weights.csv"
 
-WEIGHTS = np.array([7.87123598, 7.29097985, 33.38541097])
+WEIGHTS = np.array([7.87123598, 7.29097985, 33.38541097, 1])
 WEIGHTS_TRAINING_SIZE = 1000
 
 
@@ -49,6 +51,7 @@ class Evaluation:
         self.test_color_dict = get_index(TEST_COLOR_INDEX_PATH)
         self.test_sift_dict = get_index(TEST_SIFT_INDEX_PATH)
         self.test_learning_dict = get_index(TEST_LEARNING_INDEX_PATH)
+        self.test_tag_dict = pickle.load(open(TEST_TAG_SCORE_PATH, "r"))
 
     def run(self, weights):
         total = 0.
@@ -68,6 +71,9 @@ class Evaluation:
             # Compute deep learning predictions of query image
             predictions = self.test_learning_dict.get(test_name)[1]
 
+            # Get how well the tags score in each category
+            category_score = self.test_tag_dict.get(test_name)
+
             for file_name, train_value in self.train_color_dict.iteritems():
                 train_label = train_value[0]
                 train_color = train_value[1]
@@ -77,7 +83,12 @@ class Evaluation:
                 sift_sim = sift_similarity(query_sift, self.train_sift_dict.get(file_name)[1])
                 learning_sim = learning_similarity(predictions, train_label)
 
-                score = calculate_score(weights, [color_sim, sift_sim, learning_sim])
+                if category_score is None:
+                    tag_score = 0
+                else:
+                    tag_score = category_score.get(train_label)
+
+                score = calculate_score(weights, [color_sim, sift_sim, learning_sim, tag_score])
                 results.append((score, train_label))
 
             results = sorted(results, key=lambda x: x[0], reverse=True)
@@ -91,28 +102,31 @@ class Evaluation:
 evaluation = Evaluation()
 
 # Color histogram accuracy
-print "Color histogram: ", evaluation.run([1, 0, 0])
+# print "Color histogram: ", evaluation.run([1, 0, 0, 0])
 
 # SIFT accuracy
-print "SIFT: ", evaluation.run([0, 1, 0])
+# print "SIFT: ", evaluation.run([0, 1, 0, 0])
 
 # Deep learning accuracy
-print "Deep learning: ", evaluation.run([0, 0, 1])
+# print "Deep learning: ", evaluation.run([0, 0, 1, 0])
+
+# Text accuracy
+# print "Text: ", evaluation.run([0, 0, 0, 1])
 
 # Overall accuracy
-print "Overall: ", evaluation.run(WEIGHTS)
+# print "Overall: ", evaluation.run(WEIGHTS)
 
 # Find most optimal accuracy
-for i in xrange(WEIGHTS_TRAINING_SIZE):
-    w = []
-    for _ in xrange(3):     # Number of features
-        w.append(random.uniform(0.1, 50.0))
-
-    MAP = evaluation.run(w)
-
-    with open(WEIGHTS_INDEX_PATH, "a") as weight_path:
-        weight_path.write("%s,%s\n" % (str(np.array(w)), str(MAP)))
-    print "Iteration ", (i+1), ": ", MAP
+# for i in xrange(WEIGHTS_TRAINING_SIZE):
+#     w = []
+#     for _ in xrange(3):     # Number of features
+#         w.append(random.uniform(0.1, 50.0))
+#
+#     MAP = evaluation.run(w)
+#
+#     with open(WEIGHTS_INDEX_PATH, "a") as weight_path:
+#         weight_path.write("%s,%s\n" % (str(np.array(w)), str(MAP)))
+#     print "Iteration ", (i+1), ": ", MAP
 
 
 #################################################################
