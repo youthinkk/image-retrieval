@@ -13,12 +13,6 @@ def get_weights(color_check=1, word_check=1, learning_check=1, tag_check=1):
         return np.array([color_check, word_check, learning_check, tag_check])
     elif sum([color_check, word_check, learning_check, tag_check]) == 4:
         return np.array([7.87123598, 7.29097985, 33.38541097, 1])
-    elif color_check and word_check:
-        return np.array([2.03903332, 48.87698212, 0])
-    elif color_check and learning_check:
-        return np.array([0.16166477, 0, 48.50677216])
-    elif word_check and learning_check:
-        return np.array([0, 6.52709701, 33.09908698])
 
     return np.array([7.87123598, 7.29097985, 33.38541097, 1])
 
@@ -105,6 +99,7 @@ class GUI:
 
         weights = get_weights(self.color_check.get(), self.word_check.get(), self.learning_check.get(), tag_check)
         self.searcher.set_weights(weights)
+        text_only = self.color_check.get() + self.word_check.get() + self.learning_check.get() == 0
 
 
         self.result_image_frame = Frame(self.master)
@@ -112,7 +107,14 @@ class GUI:
 
         # perform the search
         start = time.time()
-        results = self.searcher.retrieve_images(self.file_name, tags)
+        if text_only or self.file_name is None:
+            try:
+                self.query_image_frame.destroy()
+            except AttributeError:
+                None
+            results = self.searcher.retrieve_by_tags(tags)
+        else:
+            results = self.searcher.retrieve_images(self.file_name, tags)
         end = time.time()
         print "Search time: %s" % str(end - start)
 

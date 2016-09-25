@@ -64,6 +64,23 @@ class Searcher:
         top_k = results[:K_SIZE]
         return top_k
 
+    def retrieve_by_tags(self, tags):
+        results = []
+        tags_score, matched_images = self.tag_descriptor.get_score(tags)
+
+        for i in xrange(self.train_length):
+            mult = 1
+            if self.train_file_names[i] in matched_images:
+                mult = 2
+
+            score = mult * tags_score[self.train_labels[i]]
+            results.append((score, self.train_file_names[i]))
+
+        results = sorted(results, key=lambda x: x[0], reverse=True)
+        results = remove_duplicate(results)
+        top_k = results[:K_SIZE]
+        return top_k
+
     def calculate_score(self, similarities):
         return np.inner(self.weights, similarities)
 
