@@ -9,8 +9,8 @@ from src.file import get_index
 
 K_SIZE = 16
 TRAIN_COLOR_INDEX_PATH = "../data/index/train_histogram.csv"
-TRAIN_SIFT_INDEX_PATH = "../data/index/train_sift_622.csv"
-VISUAL_VOCABULARY_PATH = "../data/index/visual_vocab_622"
+TRAIN_SIFT_INDEX_PATH = "../data/index/train_sift.csv"
+VISUAL_VOCABULARY_PATH = "../data/index/visual_vocab"
 CATEGORY_TAGS_PATH = "../data/category_tags"
 DEFAULT_WEIGHTS = np.array([0.84757445, 3.67971924, 48.4926241, 1])
 
