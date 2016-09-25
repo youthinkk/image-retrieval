@@ -10,9 +10,9 @@ from collections import Counter
 class TagDescriptor:
 
     def __init__(self, category_tags):
-        tag_dict = open(category_tags, 'rb')
-        self.tag_dict = pickle.load(tag_dict)
-        tag_dict.close()
+        f = open(category_tags, 'rb')
+        self.cat_dict = pickle.load(f)
+        f.close()
         self.categories = ['alley', 'antlers', 'baby', 'balloons', 'beach', 'bear', 'birds', 'boats', 'cars', 'cat',
                            'computer', 'coral', 'dog', 'fish', 'flags', 'flowers', 'horses', 'leaf', 'plane', 'rainbow',
                            'rocks', 'sign', 'snow', 'tiger', 'tower', 'train', 'tree', 'whales', 'window', 'zebra']
@@ -34,14 +34,14 @@ class TagDescriptor:
 
         score = {}
         for cat in self.categories:
-            if len(self.tag_dict[cat]) == 0:
+            cat_tags = self.cat_dict.get(cat)
+            if cat_tags is None:
                 score[cat] = 0
             else:
                 total = 0
-                for stored_tag, weight in self.tag_dict[cat]:
-                    for tag in tags:
-                        if stored_tag == tag:
-                            total += weight
+                for tag in tags:
+                    if cat_tags.has_key(tag):
+                        total += cat_tags.get(tag)
 
                 score[cat] = total
 
@@ -72,9 +72,9 @@ class TagDescriptor:
 #             tags += (dictionary.get(filename))
 #
 #     num_of_tags = float(len(tags))
-#     weights = []
+#     weights = {}
 #     for tag, count in Counter(tags).iteritems():
-#         weights.append((tag, count / num_of_tags))
+#         weights[tag] = count / num_of_tags
 #     category_tags[cat] = weights
 #
 # print category_tags
