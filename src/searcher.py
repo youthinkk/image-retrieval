@@ -45,14 +45,18 @@ class Searcher:
         # Compute deep learning predictions of query image
         predictions = self.learning_descriptor.inference(query_path)
 
-        tags_score = self.tag_descriptor.get_score(tags)
+        tags_score, matched_images = self.tag_descriptor.get_score(tags)
 
         for i in xrange(self.train_length):
             color_sim = color_similarity(query_color, self.train_colors[i])
             sift_sim = sift_similarity(query_sift, self.train_sifts[i])
             learning_sim = learning_similarity(predictions, self.train_labels[i])
 
-            score = self.calculate_score([color_sim, sift_sim, learning_sim, tags_score[self.train_labels[i]]])
+            mult = 1
+            if self.train_file_names[i] in matched_images:
+                mult = 2
+
+            score = self.calculate_score([color_sim, sift_sim, learning_sim, mult * tags_score[self.train_labels[i]]])
             results.append((score, self.train_file_names[i]))
 
         results = sorted(results, key=lambda x: x[0], reverse=True)

@@ -33,19 +33,25 @@ class TagDescriptor:
         tags = self.filter_tags(tags)
 
         score = {}
+        matched_images = []
         for cat in self.categories:
             cat_tags = self.cat_dict.get(cat)
+            matched = []
             if cat_tags is None:
                 score[cat] = 0
             else:
                 total = 0
                 for tag in tags:
                     if cat_tags.has_key(tag):
-                        total += cat_tags.get(tag)
+                        total += cat_tags.get(tag)[0]
+                        matched.append(cat_tags.get(tag)[1])
 
                 score[cat] = total
 
-        return score
+            if len(matched) > 0:
+                matched_images += list(set.intersection(*matched))
+
+        return score, matched_images
 
 
 #####################################################################
@@ -74,7 +80,13 @@ class TagDescriptor:
 #     num_of_tags = float(len(tags))
 #     weights = {}
 #     for tag, count in Counter(tags).iteritems():
-#         weights[tag] = count / num_of_tags
+#         occurance = set()
+#         for img in images:
+#             filename = img.split("/")[-1]
+#             if dictionary.has_key(filename):
+#                 if tag in dictionary.get(filename):
+#                     occurance.add(filename.replace(".jpg", "_%s.jpg" % cat))
+#         weights[tag] = (count / num_of_tags, occurance)
 #     category_tags[cat] = weights
 #
 # print category_tags
