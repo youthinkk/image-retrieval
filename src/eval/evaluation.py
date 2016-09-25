@@ -117,16 +117,18 @@ evaluation = Evaluation()
 # print "Overall: ", evaluation.run(WEIGHTS)
 
 # Find most optimal accuracy
-# for i in xrange(WEIGHTS_TRAINING_SIZE):
-#     w = []
-#     for _ in xrange(3):     # Number of features
-#         w.append(random.uniform(0.1, 50.0))
-#
-#     MAP = evaluation.run(w)
-#
-#     with open(WEIGHTS_INDEX_PATH, "a") as weight_path:
-#         weight_path.write("%s,%s\n" % (str(np.array(w)), str(MAP)))
-#     print "Iteration ", (i+1), ": ", MAP
+for i in xrange(WEIGHTS_TRAINING_SIZE):
+    w = []
+    w.append(random.uniform(0.1, 10.0))
+    w.append(random.uniform(0.1, 10.0))
+    w.append(random.uniform(60.0, 70.0))
+    w.append(random.uniform(50.0, 60.0))
+
+    MAP = evaluation.run(w)
+
+    with open(WEIGHTS_INDEX_PATH, "a") as weight_path:
+        weight_path.write("%s,%s\n" % (str(np.array(w)), str(MAP)))
+    print "Iteration ", (i+1), ": ", MAP
 
 
 #################################################################

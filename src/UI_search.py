@@ -9,18 +9,30 @@ DISPLAY_IMAGE_COLUMNS = 4
 
 
 def get_weights(color_check=1, word_check=1, learning_check=1, tag_check=1):
-    if sum([color_check, word_check, learning_check, tag_check]) == 1:
-        return np.array([color_check, word_check, learning_check, tag_check])
-    elif sum([color_check, word_check, learning_check, tag_check]) == 4:
-        return np.array([7.87123598, 7.29097985, 33.38541097, 1])
+    if sum([color_check, word_check, learning_check, tag_check]) == 4:
+        return np.array([4.1104653, 3.57918689, 64.96529109, 71.38332684])
+    elif color_check and word_check and learning_check:
+        return np.array([0.41217034, 0.59146272, 78.39068083, 0])
+    elif color_check and word_check and tag_check:
+        return np.array([17.88138915, 20.39373436, 0, 76.53196967])
+    elif color_check and learning_check and tag_check:
+        return np.array([0.54708899, 0, 50.32538765, 37.33889644])
+    elif word_check and learning_check and tag_check:
+        return np.array([0, 0.53713365, 40.32917033, 76.80932336])
     elif color_check and word_check:
-        return np.array([2.03903332, 48.87698212, 0])
+        return np.array([34.69911551, 57.88272446, 0, 0])
     elif color_check and learning_check:
-        return np.array([0.16166477, 0, 48.50677216])
+        return np.array([0.99974203, 0, 77.29419048, 0])
+    elif color_check and tag_check:
+        return np.array([5.30169211, 0, 0, 76.79761412])
     elif word_check and learning_check:
-        return np.array([0, 6.52709701, 33.09908698])
+        return np.array([0, 1.540963, 70.82281204, 0])
+    elif word_check and tag_check:
+        return np.array([0, 7.54517256, 0, 61.86508057])
+    elif learning_check and tag_check:
+        return np.array([0, 0, 0.65396474, 63.62680802])
 
-    return np.array([7.87123598, 7.29097985, 33.38541097, 1])
+    return np.array([color_check, word_check, learning_check, tag_check])
 
 
 class GUI:
