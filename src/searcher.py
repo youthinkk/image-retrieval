@@ -3,6 +3,7 @@ import numpy as np
 from src.core import describe_color
 from src.core import LearningDescriptor, learning_similarity
 from src.core import SIFTDescriptor
+from src.core import TagDescriptor
 from src.core import color_similarity, sift_similarity, remove_duplicate
 from src.file import get_index
 
@@ -10,7 +11,8 @@ K_SIZE = 16
 TRAIN_COLOR_INDEX_PATH = "../data/index/train_histogram.csv"
 TRAIN_SIFT_INDEX_PATH = "../data/index/train_sift_622.csv"
 VISUAL_VOCABULARY_PATH = "../data/index/visual_vocab_622"
-DEFAULT_WEIGHTS = np.array([0.84757445, 3.67971924, 48.4926241])
+CATEGORY_TAGS_PATH = "../data/category_tags"
+DEFAULT_WEIGHTS = np.array([0.84757445, 3.67971924, 48.4926241, 1])
 
 
 class Searcher:
@@ -19,6 +21,7 @@ class Searcher:
         self.weights = weights
         self.sift_descriptor = SIFTDescriptor(VISUAL_VOCABULARY_PATH)
         self.learning_descriptor = LearningDescriptor()
+        self.tag_descriptor = TagDescriptor(CATEGORY_TAGS_PATH)
 
         # Load training data
         train_color_list = get_index(TRAIN_COLOR_INDEX_PATH).items()
@@ -29,7 +32,7 @@ class Searcher:
         self.train_colors = [train_color_list[i][1][1] for i in xrange(self.train_length)]
         self.train_sifts = [train_sift_dict.get(self.train_file_names[i])[1] for i in xrange(self.train_length)]
 
-    def retrieve_images(self, query_path):
+    def retrieve_images(self, query_path, tags):
         query_image = cv2.imread(query_path)
         results = []
 
@@ -42,12 +45,14 @@ class Searcher:
         # Compute deep learning predictions of query image
         predictions = self.learning_descriptor.inference(query_path)
 
+        tags_score = self.tag_descriptor.get_score(tags)
+
         for i in xrange(self.train_length):
             color_sim = color_similarity(query_color, self.train_colors[i])
             sift_sim = sift_similarity(query_sift, self.train_sifts[i])
             learning_sim = learning_similarity(predictions, self.train_labels[i])
 
-            score = self.calculate_score([color_sim, sift_sim, learning_sim])
+            score = self.calculate_score([color_sim, sift_sim, learning_sim, tags_score[self.train_labels[i]]])
             results.append((score, self.train_file_names[i]))
 
         results = sorted(results, key=lambda x: x[0], reverse=True)
@@ -63,3 +68,6 @@ class Searcher:
 
     def get_weights(self):
         return self.weights
+
+    def set_tag_score(self, score):
+        self.tag_score = score

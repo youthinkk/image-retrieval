@@ -8,11 +8,11 @@ import numpy as np
 DISPLAY_IMAGE_COLUMNS = 4
 
 
-def get_weights(color_check=1, word_check=1, learning_check=1):
-    if sum([color_check, word_check, learning_check]) == 1:
-        return np.array([color_check, word_check, learning_check])
-    elif sum([color_check, word_check, learning_check]) == 3:
-        return np.array([7.87123598, 7.29097985, 33.38541097])
+def get_weights(color_check=1, word_check=1, learning_check=1, tag_check=1):
+    if sum([color_check, word_check, learning_check, tag_check]) == 1:
+        return np.array([color_check, word_check, learning_check, tag_check])
+    elif sum([color_check, word_check, learning_check, tag_check]) == 4:
+        return np.array([7.87123598, 7.29097985, 33.38541097, 1])
     elif color_check and word_check:
         return np.array([2.03903332, 48.87698212, 0])
     elif color_check and learning_check:
@@ -20,7 +20,7 @@ def get_weights(color_check=1, word_check=1, learning_check=1):
     elif word_check and learning_check:
         return np.array([0, 6.52709701, 33.09908698])
 
-    return np.array([7.87123598, 7.29097985, 33.38541097])
+    return np.array([7.87123598, 7.29097985, 33.38541097, 1])
 
 
 class GUI:
@@ -95,15 +95,24 @@ class GUI:
         except AttributeError:
             None
 
-        weights = get_weights(self.color_check.get(), self.word_check.get(), self.learning_check.get())
-        self.searcher.set_weights(weights)
         tags = self.tag_box.get()
+        if tags == "":
+            tags = []
+            tag_check = 0
+        else:
+            tags = tags.split()
+            tag_check = 1
+
+        weights = get_weights(self.color_check.get(), self.word_check.get(), self.learning_check.get(), tag_check)
+        self.searcher.set_weights(weights)
+
+
         self.result_image_frame = Frame(self.master)
         self.result_image_frame.pack()
 
         # perform the search
         start = time.time()
-        results = self.searcher.retrieve_images(self.file_name)
+        results = self.searcher.retrieve_images(self.file_name, tags)
         end = time.time()
         print "Search time: %s" % str(end - start)
 
